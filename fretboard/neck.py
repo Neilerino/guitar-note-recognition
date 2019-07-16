@@ -6,10 +6,7 @@ import numpy as np
 class Neck:
 
     def __init__(self, img):
-        self.image = img
-        grey = cv.cvtColor(self.image, cv.COLOR_BGR2GRAY)
-        self.image = rotate_image(self.image)
-        self.neck = crop_neck(self.image)
+        self.neck = crop_neck(img)
 
     def get(self):
         return self.neck
@@ -110,6 +107,18 @@ def detect_strings(img):
 def draw_lines(img, lines, frets=True):
     for x in range(len(lines)):
         for x1, y1, x2, y2 in lines[x]:
-            cv.line(img, (x1, y1), (x2, y2), (0, 0, 255), 2)
+            cv.line(img, (x1, y1), (x2, y2), (255, 255, 255), 2)
 
     return img
+
+def fix_horizontal_lines(img):
+    kernal = np.ones((1,20), np.uint8)
+    d_im = cv.dilate(img, kernal, iterations=1)
+    e_im = cv.erode(d_im, kernal, iterations=1)
+    return e_im
+
+def fix_vertical_lines(img):
+    kernal = np.ones((20,1), np.uint8)
+    d_im = cv.dilate(img, kernal, iterations=1)
+    e_im = cv.erode(d_im, kernal, iterations=1)
+    return e_im
