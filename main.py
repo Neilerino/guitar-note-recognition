@@ -1,14 +1,10 @@
 import cv2 as cv
-
+import hand_finder as hf
 
 im = cv.imread('test_imgs/fingers.jpg')
-img = cv.cvtColor(im, cv.COLOR_BGR2GRAY)
 
-
-img_blur = cv.GaussianBlur(img, (0, 0), 1.5, 1.5)
-im_edges = cv.Canny(img_blur, 100, 200)
-_, im_edges = cv.threshold(im_edges, 127, 255, cv.THRESH_BINARY)
-contours, _ = cv.findContours(im_edges, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+hand = hf.find_hand(im, im)
+contours, _ = cv.findContours(hand, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
 
 hull_ind = []
 hull_ctr = []
