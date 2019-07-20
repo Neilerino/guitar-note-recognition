@@ -35,8 +35,8 @@ def get_hist_object(im, hist):
 
 def get_contours(hist_mask_image):
     gray_hist_mask_image = cv.cvtColor(hist_mask_image, cv.COLOR_BGR2GRAY)
-    _, thresh_im = cv.threshold(gray_hist_mask_image, 0, 255, 0)
-    contours, _ = cv.findContours(thresh_im, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+    thresh_im = cv.threshold(gray_hist_mask_image, 0, 255, 0)[1]
+    contours = cv.findContours(thresh_im, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)[0]
     return contours
 
 
@@ -86,9 +86,8 @@ def farthest_point(defects, contour, centroid):
             return None
 
 
-def get_fingertip_coord(im):
-    hand_hist = hist_from_roi(im)
-    hist_masked_image = get_hist_object(im, hand_hist)
+def get_fingertip_coord(im, hist):
+    hist_masked_image = get_hist_object(im, hist)
     contour_list = get_contours(hist_masked_image)
     max_cont = max_contour(contour_list)
     contour_centroid = centroid(max_cont)

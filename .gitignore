@@ -6,3 +6,5 @@ pyvenv.cfg
 .idea/
 venv/
 *.jpg
+__pycache__/
+*.pickle
