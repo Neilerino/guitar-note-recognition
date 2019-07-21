@@ -158,7 +158,7 @@ def get_fingertip_coords(image):
     path_cwd = os.getcwd()
 
     # Path to frozen detection graph .pb file, which contains the model that is used for object detection.
-    path_ckpt = os.path.join(path_cwd, 'frozen_inference_graph.pb')
+    path_ckpt = os.path.join(path_cwd, 'fingertip_model.pb')
 
     # Model category mapping for detection labeling
     category_index = {
