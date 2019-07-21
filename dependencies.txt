@@ -1,0 +1,9 @@
+fingertip_detection.py dependencies:
+
+pip install pillow
+pip install lxml
+pip install Cython
+pip install contextlib2
+pip install matplotlib
+pip install pandas
+pip install opencv-python
