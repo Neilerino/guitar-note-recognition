@@ -5,7 +5,7 @@ from fingertip_detector import get_fingertip_coords
 from fretboard.neck import Neck
 from fretboard.fretboard import get_note, get_lines_image
 
-def find_fingertip(file_path):
+def find_fingertip(file_path=None):
     if not file_path:
         file_path = filedialog.askopenfilename()
     im = cv.imread(file_path)
