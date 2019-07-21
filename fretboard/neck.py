@@ -97,8 +97,8 @@ def detect_frets(img, will_blur=True):
     
 
 def detect_strings(img, will_blur=True):
-    min_length = 25
-    max_gap = 5
+    min_length = 12
+    max_gap = 2
     if will_blur:
         img = cv.GaussianBlur(img, (5,5), 0)
     (thresh, img) = cv.threshold(img, 100, 255, cv.THRESH_BINARY | cv.THRESH_OTSU)
@@ -109,14 +109,14 @@ def detect_strings(img, will_blur=True):
 def draw_lines(img, lines, frets=True):
     for x in range(len(lines)):
         for x1, y1, x2, y2 in lines[x]:
-            cv.line(img, (x1, y1), (x2, y2), (255, 255, 255), 2)
+            cv.line(img, (x1, y1), (x2, y2), (255, 255, 255), 4)
 
     return img
 
 def fix_horizontal_lines(img):
     kernal = np.ones((1,20), np.uint8)
-    d_im = cv.dilate(img, kernal, iterations=4)
-    e_im = cv.erode(d_im, kernal, iterations=1)
+    d_im = cv.dilate(img, kernal, iterations=2)
+    e_im = cv.erode(d_im, kernal, iterations=2)
     return e_im
 
 def fix_vertical_lines(img):
