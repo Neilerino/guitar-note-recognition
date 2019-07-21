@@ -2,9 +2,9 @@ import cv2 as cv
 import numpy as np
 
 
-def rescale_frame(frame, wpercent=130, hpercent=130):
-    width = int(frame.shape[1] * wpercent / 100)
-    height = int(frame.shape[0] * hpercent / 100)
+def rescale_frame(frame, width_scale, height_scale):
+    width = int(frame.shape[1] * width_scale)
+    height = int(frame.shape[0] * height_scale)
     return cv.resize(frame, (width, height), interpolation=cv.INTER_AREA)
 
 
@@ -24,12 +24,16 @@ def get_hist_object(im, hist):
     back_proj = cv.calcBackProject([hsv], [0, 1], hist, [0, 180, 0, 256], 1)
     se1 = cv.getStructuringElement(cv.MORPH_ELLIPSE, (15, 15))
     # FIXME: if returned image is not good often, increase radius of se2
-    se2 = cv.getStructuringElement(cv.MORPH_ELLIPSE, (20, 20))
+    se2 = cv.getStructuringElement(cv.MORPH_ELLIPSE, (25, 25))
     back_proj = cv.morphologyEx(back_proj, cv.MORPH_OPEN, se1)
     back_proj = cv.filter2D(back_proj, -1, se2, back_proj)
     back_proj = cv.morphologyEx(back_proj, cv.MORPH_CLOSE, se2)
     ret, thresh = cv.threshold(back_proj, 127, 255, cv.THRESH_BINARY)
     thresh = cv.merge((thresh, thresh, thresh))
+
+    # FIXME: remove debug feed
+    cv.imshow('dbg_thresh', rescale_frame(thresh, 0.5, 0.5))
+
     return cv.bitwise_and(im, thresh)
 
 
@@ -92,6 +96,11 @@ def get_fingertip_coord(im, hist):
     max_cont = max_contour(contour_list)
     contour_centroid = centroid(max_cont)
 
+    # FIXME: remove debug feed
+    im2 = cv.copyTo(im, None)
+    cv.drawContours(im2, max_cont, -1, (255, 0, 0), 3)
+    cv.imshow('db_max_cont', rescale_frame(im2, 0.5, 0.5))
+ 
     if max_cont is not None:
         hull = cv.convexHull(max_cont, returnPoints=False)
         defects = cv.convexityDefects(max_cont, hull)

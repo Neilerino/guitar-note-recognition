@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import filedialog, Button, Label
 import pickle
 import cv2 as cv
-from finger_tip_finder import get_fingertip_coord, hist_from_roi
+from finger_tip_finder import get_fingertip_coord, hist_from_roi, rescale_frame
 
 
 def make_profile_from_cam():
@@ -35,7 +35,7 @@ def find_finger():
     finger_tip_coords = get_fingertip_coord(im, hist)
 
     cv.circle(im, finger_tip_coords, 3, (0, 0, 255), 4)
-    cv.imshow('Fingertip', im)
+    cv.imshow('Fingertip', rescale_frame(im, 0.4, 0.4))
     cv.waitKey(0)
     cv.destroyAllWindows()
 
