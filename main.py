@@ -14,17 +14,20 @@ def find_fingertip(file_path=None):
     i_w_lines = get_lines_image(im)
     for pair in finger_tip_coords:
         cv.circle(im, pair, 3, (0, 0, 255), 4)
-        print(get_note(pair, i_w_lines))
+        note = get_note(pair, i_w_lines)
+        cv.putText(im, note, (0, 50), cv.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 2)
+        print('Note: ', note)
     cv.imshow('Fingertip', im)
     cv.waitKey(0)
     cv.destroyAllWindows()
 
+
 root = tk.Tk()
-root.geometry("200x100")
+root.geometry("150x50")
 root.resizable(0, 0)
-header = Label(root, text='Note Identifier - v0.2')
+header = Label(root, text='Note Identifier - v1.0')
 header.pack()
-finger_btn = Button(root, text='Find Fingertip', command=find_fingertip)
+finger_btn = Button(root, text='Get note', command=find_fingertip)
 finger_btn.pack()
 root.mainloop()
 
