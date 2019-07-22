@@ -126,51 +126,24 @@ def fix_vertical_lines(img):
     return e_im
 
 
-# def combine_lines(lines):
-#     x_space = 5
-#     y_space = 5
-#     new_lines = []
-#     previous_line_end = [0, 0]
-#     new_line = np.array([0, 0, 0, 0])
-#     for x in range(len(lines)):
-#         for x1, y1, x2, y2 in lines[x]:
-#             if (abs(x1 - previous_line_end[0]) < x_space) and (abs(y1-previous_line_end[1]) < y_space):
-#                 new_line[2] = x1
-#                 new_line[3] = y1
-#             else:
-#                 new_line[2] = previous_line_end[0]
-#                 new_line[3] = previous_line_end[1]
-#                 new_lines.append(new_line)
-#                 new_line[0] = x1
-#                 new_line[1] = y1
-#             previous_line_end[0] = x2
-#             previous_line_end[1] = y2
-
-#     return new_lines
-
-def combine_lines(image):
-    strong_lines = np.zeros([4,1,2])
-
-    minLineLength = 2
-    maxLineGap = 10
-
-    lines = cv.HoughLines(image,1,np.pi/180,10, minLineLength, maxLineGap)
-
-    n2 = 0
-    for n1 in range(0,len(lines)):
-        for rho,theta in lines[n1]:
-            if n1 == 0:
-                strong_lines[n2] = lines[n1]
-                n2 = n2 + 1
+def combine_lines(lines):
+    x_space = 5
+    y_space = 5
+    new_lines = []
+    previous_line_end = [0, 0]
+    new_line = np.array([0, 0, 0, 0])
+    for x in range(len(lines)):
+        for x1, y1, x2, y2 in lines[x]:
+            if (abs(x1 - previous_line_end[0]) < x_space) and (abs(y1-previous_line_end[1]) < y_space):
+                new_line[2] = x1
+                new_line[3] = y1
             else:
-                if rho < 0:
-                    rho*=-1
-                    theta-=np.pi
-                    closeness_rho = np.isclose(rho,strong_lines[0:n2,0,0],atol = 10)
-                    closeness_theta = np.isclose(theta,strong_lines[0:n2,0,1],atol = np.pi/36)
-                    closeness = np.all([closeness_rho,closeness_theta],axis=0)
-                    if not any(closeness) and n2 < 4:
-                        strong_lines[n2] = lines[n1]
-                        n2 = n2 + 1
+                new_line[2] = previous_line_end[0]
+                new_line[3] = previous_line_end[1]
+                new_lines.append(new_line)
+                new_line[0] = x1
+                new_line[1] = y1
+            previous_line_end[0] = x2
+            previous_line_end[1] = y2
 
-    return strong_lines
+    return new_lines
